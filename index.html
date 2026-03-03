@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Job Application Tracker</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 800px; margin: 40px auto; padding: 20px; background: #f4f6f9; }
+    h1 { color: #232f3e; }
+    .form-group { margin: 15px 0; }
+    label { display: block; font-weight: bold; margin-bottom: 5px; }
+    input, select { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
+    button { background: #ff9900; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; }
+    button:hover { background: #e68900; }
+    .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 20px; }
+    #applications-list { margin-top: 30px; }
+    .app-card { background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 10px; border-left: 4px solid #ff9900; }
+    .status-badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 12px; font-weight: bold; }
+    .Applied { background: #d4edff; color: #0066cc; }
+    .Interview { background: #fff3cd; color: #856404; }
+    .Offer { background: #d4edda; color: #155724; }
+    .Rejected { background: #f8d7da; color: #721c24; }
+  </style>
+</head>
+<body>
+  <h1>🚀 Job Application Tracker</h1>
+
+  <div class="card">
+    <h2>Add New Application</h2>
+    <div class="form-group">
+      <label>Company Name</label>
+      <input type="text" id="company" placeholder="e.g. IBM, Amazon, Google" />
+    </div>
+    <div class="form-group">
+      <label>Job Title</label>
+      <input type="text" id="title" placeholder="e.g. Data Analyst, Cloud Engineer" />
+    </div>
+    <div class="form-group">
+      <label>Status</label>
+      <select id="status">
+        <option value="Applied">Applied</option>
+        <option value="Interview">Interview</option>
+        <option value="Offer">Offer</option>
+        <option value="Rejected">Rejected</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Date Applied</label>
+      <input type="date" id="date" />
+    </div>
+    <div class="form-group">
+      <label>Notes</label>
+      <input type="text" id="notes" placeholder="e.g. Referral from John, phone screen next week" />
+    </div>
+    <button onclick="submitApplication()">Submit Application</button>
+  </div>
+
+  <div class="card">
+    <h2>My Applications</h2>
+    <button onclick="loadApplications()" style="background:#232f3e;">🔄 Refresh List</button>
+    <div id="applications-list"><p>Click Refresh to load your applications.</p></div>
+  </div>
+
+  <script>
+    const API_URL = 'https://ogaw9225f3.execute-api.us-east-1.amazonaws.com/prod/applications';
+
+    async function submitApplication() {
+      const company = document.getElementById('company').value;
+      const title = document.getElementById('title').value;
+      const status = document.getElementById('status').value;
+      const date = document.getElementById('date').value;
+      const notes = document.getElementById('notes').value;
+
+      if (!company || !title || !date) {
+        alert('Please fill in Company, Job Title, and Date!');
+        return;
+      }
+
+      const response = await fetch(API_URL, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          company: company,
+          jobTitle: title,
+          status: status,
+          dateApplied: date,
+          notes: notes
+        })
+      });
+
+      const result = await response.json();
+      if (response.ok) {
+        alert('✅ Application saved successfully!');
+        document.getElementById('company').value = '';
+        document.getElementById('title').value = '';
+        document.getElementById('notes').value = '';
+        document.getElementById('date').value = '';
+        loadApplications();
+      } else {
+        alert('❌ Error: ' + result.error);
+      }
+    }
+
+    async function loadApplications() {
+      const div = document.getElementById('applications-list');
+      div.innerHTML = '<p>Loading...</p>';
+
+      const response = await fetch(API_URL);
+      const items = await response.json();
+
+      if (items.length === 0) {
+        div.innerHTML = '<p>No applications yet. Add your first one above!</p>';
+        return;
+      }
+
+      items.sort((a, b) => b.dateApplied.localeCompare(a.dateApplied));
+
+      div.innerHTML = items.map(app => `
+        <div class="app-card">
+          <strong>${app.company}</strong> — ${app.jobTitle}
+          <span class="status-badge ${app.status}">${app.status}</span>
+          <br><small>📅 ${app.dateApplied} ${app.notes ? '| 📝 ' + app.notes : ''}</small>
+        </div>
+      `).join('');
+    }
+  </script>
+</body>
+</html>
