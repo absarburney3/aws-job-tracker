@@ -85,19 +85,17 @@ VPC: 10.0.0.0/16 (us-east-1)
 
 ## 📸 Screenshots
 
-## 📸 Screenshots
-
 ### Live Site
-![Live Site](screenshots/live-site.png)
+![Live Site](screenshots/updatedjobtracker.png)
 
 ### CloudWatch Dashboard
-![Dashboard](screenshots/cloudwatch-dashboard.png)
+![Dashboard](screenshots/CloudwatchDashboard.png)
 
 ### DynamoDB Table
-![DynamoDB](screenshots/dynamodb-table.png)
+![DynamoDB](screenshots/Dynamodbtableitems.png)
 
 ### SNS Email Alert
-![SNS Alert](screenshots/sns-email.png)
+![SNS Alert](screenshots/SNSNotification.png)
 
 
 ---
