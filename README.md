@@ -8,7 +8,7 @@ Built as a hands-on project while preparing for the **AWS Solutions Architect As
 
 ## 🏗️ Architecture
 
-![Architecture Diagram](architecture.png)
+![Architecture Diagram](Architecture Diagram.png)
 
 ---
 
