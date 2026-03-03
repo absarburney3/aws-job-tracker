@@ -86,6 +86,9 @@ VPC: 10.0.0.0/16 (us-east-1)
 ## 📸 Screenshots
 
 ### Live Site
+## 🌐 Live Demo
+**[View Live Site](https://d3mlbz1x618quo.cloudfront.net)**
+
 ![Live Site](screenshots/updatedjobtracker.png)
 
 ### CloudWatch Dashboard
